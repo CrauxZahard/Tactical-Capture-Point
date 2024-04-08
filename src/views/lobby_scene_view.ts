@@ -1,9 +1,10 @@
 import { Assets, Sprite, Texture } from "pixi.js";
 import { PixiView } from "../core/PixiView";
+import { InteractiveSprite } from "../core/InteractiveSprite";
+import { Character } from "../core/Character";
+import { CharacterRole } from "../enum/CharacterRoleEnum";
 
 export class LobbySceneView extends PixiView {
- 
-    private _image: Sprite | null = null;
     private _happyPackedScene: Texture | null = null;
 
     public override async ready (): Promise<void> {
@@ -18,11 +19,25 @@ export class LobbySceneView extends PixiView {
         if(!this._happyPackedScene){
             return;
         }
-        this._image = new Sprite(this._happyPackedScene);
-        this._image.x = this.width / 2;
-        this._image.y = this.height / 2;
-        this._image.scale = 0.5;
-        this._image.anchor.set(0.5);    
-        this.addChild(this._image);
+        
+        let character = new Character({
+            name: "character-1 (tile)",
+            role: CharacterRole.LIFTERS,
+            image: this._happyPackedScene,
+            skill: null
+        })
+
+        character.x = this.width / 2
+        character.y = this.height / 2
+        character.scale = 0.5
+        character.anchor.set(0.5)
+        character.addEvent("click", characterClicked.bind(character))
+        console.log(character)
+        this.addChild(character)
     }
+}
+
+// testing
+function characterClicked(this: any) {
+    this.x += 20
 }
