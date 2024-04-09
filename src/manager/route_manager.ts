@@ -1,15 +1,12 @@
-import { MainSceneView } from "../views/main_scene_view";
 import { PixiView } from "../core/PixiView";
 import { app } from "../main";
+import { LobbySceneView } from "../views/lobby_scene_view";
 
 export class RouteManager {
     private _currentScene: PixiView | null = null;
 
-    constructor(){
-        this._currentScene = new MainSceneView();
-    }
-
     public startGame(){
+        this._currentScene = new LobbySceneView();
         app.stage.addChild(this._currentScene!);
     }
 
@@ -21,5 +18,9 @@ export class RouteManager {
         this._currentScene.destroy();
         this._currentScene = controller;
         app.stage.addChild(this._currentScene);
+    }
+
+    public getAssetImage(filepath: string): string {
+        return "./src/assets/img/" + filepath;
     }
 }

@@ -3,7 +3,6 @@ import { InteractiveSpriteEventModeEnum } from "../enums/InteractiveSpriteEventM
 
 
 export class InteractiveSprite extends Sprite {
-    private _image: Texture
     private _eventMode: string;
 
     constructor(
@@ -12,7 +11,6 @@ export class InteractiveSprite extends Sprite {
     ) {
         super(loadedTexture)
         this._eventMode = eventMode == InteractiveSpriteEventModeEnum.STATIC ? "static" : "dynamic";
-        this._image = loadedTexture
     }
 
     // TODO: use a proper type

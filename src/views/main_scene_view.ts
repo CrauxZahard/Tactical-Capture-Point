@@ -1,31 +1,32 @@
 import { Assets, Texture } from "pixi.js";
 import { PixiView } from "../core/PixiView";
-import { Tile } from "../core/Tile";
-import { Player } from "../core/Player";
-import { Character } from "../core/Character";
-import { CharacterRole } from "../enum/CharacterRoleEnum";
+import { Tile } from "../custom_pixis/Tile";
+import { PlayerModel } from "../models/PlayerModel";
+import { Character } from "../custom_pixis/Character";
+import { CharacterRoleEnum } from "../enums/CharacterRoleEnum";
 import { TurnManager } from "../manager/turn_manager";
+import { router } from "../main";
 
 const lifter = new Character({
     name: "Droid-01",
-    role: CharacterRole.LIFTERS
+    role: CharacterRoleEnum.LIFTERS
 })
 const support = new Character({
     name: "Droid-02",
-    role: CharacterRole.SUPPORTS
+    role: CharacterRoleEnum.SUPPORTS
 })
 const sprinter = new Character({
     name: "Droid-03",
-    role: CharacterRole.SPRINTER
+    role: CharacterRoleEnum.SPRINTER
 })
 
-const player_1 = new Player({
+const player_1 = new PlayerModel({
     name: "Craux",
     id: 1,
     avatar: 'some-url-to-avatar'
 })
 
-const player_2 = new Player({
+const player_2 = new PlayerModel({
     name: "Tezada",
     id: 1,
     avatar: 'some-url-to-avatar'
@@ -41,10 +42,9 @@ export class MainSceneView extends PixiView {
     private _tile: Texture | null = null;
 
     public override async ready(): Promise<void> {
-        this._tile = await Assets.load('./src/assets/img/center-tile.png');
+        this._tile = await Assets.load(router.getAssetImage("tiles/red-tile.png"));
         console.log("Initializing");
         this.addImage();
-
         test()
     }   
 
@@ -54,13 +54,12 @@ export class MainSceneView extends PixiView {
         }
     }
 
-    public addImage() {
+    public addImage(){
         this._image = new Tile(this._tile!, {x: 0, y:0});
         this._image.x = this.width / 2;
         this._image.y = this.height / 2;
         this._image.scale = 0.5;
         this._image.anchor.set(0.5);
-
         this.addChild(this._image);
     }
 

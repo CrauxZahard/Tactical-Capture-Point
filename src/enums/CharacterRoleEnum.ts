@@ -1,4 +1,4 @@
-export enum CharacterRole {
+export enum CharacterRoleEnum {
     LIFTERS,
     SUPPORTS,
     SPRINTER

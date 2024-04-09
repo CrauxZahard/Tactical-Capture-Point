@@ -2,18 +2,16 @@ import {  Container, Graphics, Sprite } from "pixi.js";
 import { app } from "../main";
 
 export class PixiView extends Container {
-    constructor () { 
+    constructor (backgroundColor: string | null = null) { 
         super();
-        this.instantiate();
+        this.instantiate(backgroundColor);
     };
 
-    private async instantiate(): Promise<void>{
+    private async instantiate(backgroundColor: string | null): Promise<void>{
         const container = new Graphics();
-        container.beginPath();
         container.rect(0, 0, app.canvas.width, app.canvas.height);
-        container.fill("#008000");
+        container.fill(backgroundColor ? backgroundColor : "#008000");
         this.addChild(container);
-        
         await this.ready();
         app.ticker.add(this.process.bind(this));
     }

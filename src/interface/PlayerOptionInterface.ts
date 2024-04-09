@@ -1,6 +1,6 @@
-import { Character } from "../core/Character"
+import { Character } from "../custom_pixis/Character"
 
-export interface PlayerOption {
+export interface PlayerOptionInterface {
     name: string,
     id: number,
     avatar: string
