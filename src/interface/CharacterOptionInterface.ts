@@ -1,9 +1,9 @@
 import { Texture } from "pixi.js";
-import { CharacterRole } from "../enum/CharacterRoleEnum";
+import { CharacterRoleEnum } from "../enums/CharacterRoleEnum";
 
-export interface CharacterOption {
+export interface CharacterOptionInterface {
     name: string,
-    role: CharacterRole,
+    role: CharacterRoleEnum,
     skill?: (() => void) | null,
     image?: Texture
 }

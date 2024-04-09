@@ -1,45 +1,55 @@
-import { Character } from "../core/Character";
-import { Player } from "../core/Player";
-import { CharacterState } from "../enum/CharacterStateEnum";
+import { Character } from "../custom_pixis/Character";
+import { PlayerModel } from "../models/PlayerModel";
+import { CharacterStateEnum } from "../enums/CharacterStateEnum";
 import { PlayerManager } from "./player_manager";
 
 export class TurnManager {
-    private _currentTurn: number = 1;
-    private _player_manager: PlayerManager
+    private _currentTurn: PlayerModel | null = null;
+    private _player_manager: PlayerManager;
     
-    constructor(player_one: Player, player_two: Player) {
+    constructor(player_one: PlayerModel, player_two: PlayerModel) {
         this._player_manager = new PlayerManager(player_one, player_two)
     }
 
-    public getPlayerOne(): Player {
+    public getPlayerOne(): PlayerModel {
         return this._player_manager.getPlayerOne()
     }
-    public getPlayerTwo(): Player {
+    public getPlayerTwo(): PlayerModel {
         return this._player_manager.getPlayerTwo()
     }
 
-    public getCurrentPlayer(): Player {
-        /*
-        this._currentTurn => Player
-        1 => first player
-        2 => second player
-        3 => first player
-        */
-        if(this._currentTurn % 2 === 1) {
-            return this.getPlayerOne()
+    public getCurrentPlayer(): PlayerModel {
+        if(this._currentTurn == null){
+            this._currentTurn = this.getPlayerOne();
         }
-        return this.getPlayerTwo()
+        return this._currentTurn;
     }
 
-    public endTurn(): void {
-        this._currentTurn += 1
+    public endTurn(): void { // i dont know...
+        // this._currentTurn += 1
     }
 
     public canMoveAgain(): boolean {
-        return this.getCurrentPlayer()
-        .getCharacters()
+        // dont think pure logic, think of the UI too.
+        // when the player press the end button of his turn the turn will immediately ended.
+        // player can also choose what to move and what not to move before ending the match.
+        // There will be a move and attack so when player move and attack, the character should not be movable...
+        // maybe you can add a function in the character that prevent the user from doing stuff instead of handling this here.
+        // but first we need to draw the map... lets get back to this when we are implmenting discord sdk
+        return this._currentTurn!.getCharacters()
         .some((character: Character) => {
-            character.getState() === CharacterState.READY
+            character.getState() === CharacterStateEnum.READY
         })
+    }
+
+
+    public setCurrentPlayer(){ // call this function when player press end button;
+        if(!this._currentTurn!.isEquals(this.getPlayerOne())) {
+            this._currentTurn = this.getPlayerTwo();
+            return this._currentTurn;
+        }
+
+        this._currentTurn = this.getPlayerOne();
+        return this._currentTurn;
     }
 }

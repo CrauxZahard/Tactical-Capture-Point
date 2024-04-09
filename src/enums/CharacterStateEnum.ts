@@ -1,4 +1,4 @@
-export enum CharacterState {
+export enum CharacterStateEnum {
     NOT_STARTED, // THE GAME IS NOT STARTED YET
     READY, // CAN MOVE
     FINISHED, // ALRADY MOVED

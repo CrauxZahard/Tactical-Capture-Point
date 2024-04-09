@@ -1,15 +1,18 @@
 import { Sprite, Texture } from "pixi.js";
-
+import { InteractiveSpriteEventModeEnum } from "../enums/InteractiveSpriteEventModeEnum";
 
 
 export class InteractiveSprite extends Sprite {
-    eventMode: 'static' | 'dynamic'
     private _image: Texture
-    
-    constructor(loadedTexture: Texture, eventMode: 'static' | 'dynamic' = 'static') {
+    private _eventMode: string;
+
+    constructor(
+        loadedTexture: Texture, 
+        eventMode: InteractiveSpriteEventModeEnum = InteractiveSpriteEventModeEnum.STATIC
+    ) {
         super(loadedTexture)
+        this._eventMode = eventMode == InteractiveSpriteEventModeEnum.STATIC ? "static" : "dynamic";
         this._image = loadedTexture
-        this.eventMode = eventMode
     }
 
     // TODO: use a proper type
