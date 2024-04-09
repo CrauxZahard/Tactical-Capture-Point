@@ -130,35 +130,35 @@ export class LobbySceneView extends PixiView {
 
     private addButtonToBackground(){
         // comming soon button
-        const commingSoonContainer = new Container();
+        const container1 = new Container();
         this._images.push(new InteractiveSprite(this._textures[5]));
         this._images[4].scale = .25;
-        commingSoonContainer.addChild(this._images[4]);
-        const commingSoonButton = new Button(commingSoonContainer);
-        commingSoonButton.view.x = this.width / 3.6;
-        commingSoonButton.view.y = this.height / 1.9;
-        this.addChild(commingSoonButton.view);
+        container1.addChild(this._images[4]);
+        const button1 = new Button(container1);
+        button1.view.x = this.width / 3.6;
+        button1.view.y = this.height / 1.9;
+        this.addChild(button1.view);
         // find match button
-        const findMatchContainer = new Container();
+        const container2 = new Container();
         this._images.push(new InteractiveSprite(this._textures[6]));
         this._images[5].scale = .25;
-        findMatchContainer.addChild(this._images[5]);
-        const findMatchButton = new Button(findMatchContainer);
-        findMatchButton.view.x = this.width / 2.25;
-        findMatchButton.view.y = this.height / 1.9;
-        findMatchButton.view.on("click", () => {
+        container2.addChild(this._images[5]);
+        const button2 = new Button(container2);
+        button2.view.x = this.width / 2.25;
+        button2.view.y = this.height / 1.9;
+        button2.view.on("click", () => {
             router.changeScene(new MainSceneView());
         });
-        this.addChild(findMatchButton.view);
-        // credits button
-        const creditsContainer = new Container();
+        this.addChild(button2.view);
+        // credit match button
+        const container3 = new Container();
         this._images.push(new InteractiveSprite(this._textures[7]));
         this._images[6].scale = .25;
-        creditsContainer.addChild(this._images[6]);
-        const creditsButton = new Button(creditsContainer);
-        creditsButton.view.x = this.width / 1.64;
-        creditsButton.view.y = this.height / 1.9;
-        this.addChild(creditsButton.view);
+        container3.addChild(this._images[6]);
+        const button3 = new Button(container3);
+        button3.view.x = this.width / 1.64;
+        button3.view.y = this.height / 1.9;
+        this.addChild(button3.view);
     }
 
     private moveBackgroundBasedOnMouseMovement(event: FederatedPointerEvent){
