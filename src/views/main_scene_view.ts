@@ -8,7 +8,7 @@ export class MainSceneView extends PixiView {
     private _happyPackedScene: Texture | null = null;
 
     public override async ready(): Promise<void> {
-        this._happyPackedScene = await Assets.load('./src/assets/img/center-tile.png');
+        this._happyPackedScene = await Assets.load('./src/assets/img/tiles/red-tile.png');
         console.log("Initializing");
         this.addHappyImage();
         /*
@@ -29,12 +29,11 @@ export class MainSceneView extends PixiView {
     }
 
     public addHappyImage() {
-        this._image = new InteractiveSprite(this._happyPackedScene!, "dynamic");
+        this._image = new InteractiveSprite(this._happyPackedScene!);
         this._image.x = this.width / 2;
         this._image.y = this.height / 2;
         this._image.scale = 0.5;
         this._image.anchor.set(0.5);
-
         if(this._image instanceof InteractiveSprite) {
             this._image.addEvent("click", spriteClick.bind(this))
         }
