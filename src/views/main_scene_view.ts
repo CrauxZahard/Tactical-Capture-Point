@@ -1,4 +1,4 @@
-import { Assets, FederatedEvent, FederatedPointerEvent, Texture } from "pixi.js";
+import { Assets, FederatedEvent, FederatedPointerEvent, Point, Texture } from "pixi.js";
 import { PixiView } from "../core/PixiView";
 import { Tile } from "../custom_pixis/Tile";
 // import {  } from "";
@@ -8,6 +8,7 @@ import { CharacterRoleEnum } from "../enums/CharacterRoleEnum";
 import { TurnManager } from "../manager/turn_manager";
 import { router } from "../main";
 import { CompositeTilemap, Tilemap } from "@pixi/tilemap";
+import { drawMap } from "../helpers/draw_map";
 
 const lifter = new Character({
     name: "Droid-01",
@@ -46,15 +47,18 @@ export class MainSceneView extends PixiView {
  
     private _image: Tile | null = null
     private _tile: Texture | null = null;
-    private _tilemap: CompositeTilemap | null = null;
+    private _tilemap: CompositeTilemap | undefined
     private _isClicking: boolean = false;
-    private _eventData: FederatedPointerEvent | null = null;
+    private _eventData: any = null;
+    private _oldData: Point | undefined;
 
     public override async ready(): Promise<void> {
-        this._tile = await Assets.load(router.getAssetImage("tiles/normal-tile.png"));
+        preloadAssets()
+        this._tile = await Assets.load("normal-tile");
         console.log("Initializing");
-        this.drawTilemap();
+        await this.drawTilemap();
         this.setCameraMovement();
+        this.zoom()
         test()
     }   
 
@@ -65,13 +69,17 @@ export class MainSceneView extends PixiView {
         }
     }
 
-    private setCameraMovement(){
+    private setCameraMovement() {
         if(this._tilemap == null){
             return;
         }
         this.interactive = true;
         this.on("pointerdown", (event) => {
             this._eventData = event;
+            this._oldData = {
+                x: event.globalX,
+                y: event.globalY
+            } as Point
             this._isClicking = true;
         });
         this.on("pointerup", () => {
@@ -80,40 +88,48 @@ export class MainSceneView extends PixiView {
         });
         this.on('pointermove', () => {
             if (this._isClicking) {
-                const newPosition = this._eventData!.getLocalPosition(this._tilemap!.parent);
-                this._tilemap!.x = newPosition.x * 0.5;
-                this._tilemap!.y = newPosition.y * 0.5;
+                const newData = this._eventData.getLocalPosition(this._tilemap?.parent)
+                this._tilemap!.x += (newData.x - (this._oldData?.x || 0)) * 0.5
+                this._tilemap!.y += (newData.y - (this._oldData?.y || 0)) * 0.5
+                this._oldData = newData
             }
         });
     }
 
-    private drawTilemap(){
-        this._tilemap = new CompositeTilemap();
+    private async drawTilemap() {
+        const drawer = await drawMap(
+            {x: 20, y: 20},
+            [{x: 1, y: 2}, {x: 1, y: 3}, {x: 1, y: 1}]
+        )
+        this._tilemap = drawer
+        this.addChild(drawer);
+    }
 
-        this._tilemap.position.x = 30;
-        this._tilemap.position.y = 30;
-
-        for (let i = 0; i < 15; i++) {
-            for (let j = 0; j < 15; j++) { 
-                this._tilemap.tile(this._tile!, i * 200 , j * 200);
-            }
-        }
-
-        this.addChild(this._tilemap);
+    private zoom() {
+        this.on("wheel", (event) => {
+            this._tilemap!.scale.x -= (event.deltaY / 10000)
+            this._tilemap!.scale.y -= (event.deltaY / 10000)
+        })
     }
 
 }
 
 function test() {
-    console.log("Current turn: ")
-    console.log(turn.getCurrentPlayer())
-    turn.endTurn()
-    console.log("Next turn: ")
-    console.log(turn.getCurrentPlayer())
-    console.log("Craux Characters: ")
-    console.log(
-        turn.getPlayerOne()
-        .getCharacters()[0]
-        .getState() // returns 0 for "NOT_STARTED"
-    )
+    // console.log("Current turn: ")
+    // console.log(turn.getCurrentPlayer())
+    // turn.endTurn()
+    // console.log("Next turn: ")
+    // console.log(turn.getCurrentPlayer())
+    // console.log("Craux Characters: ")
+    // console.log(
+    //     turn.getPlayerOne()
+    //     .getCharacters()[0]
+    //     .getState() // returns 0 for "NOT_STARTED"
+    // )
+}
+
+function preloadAssets() {
+    Assets.add({alias: "normal-tile", src: router.getAssetImage("tiles/normal-tile.png")})
+    Assets.add({alias: "green-tile", src: router.getAssetImage("tiles/green-tile.png")})
+    Assets.add({alias: "red-tile", src: router.getAssetImage("tiles/red-tile.png")})
 }
