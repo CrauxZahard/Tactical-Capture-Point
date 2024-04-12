@@ -4,7 +4,7 @@ import { RouteManager } from './manager/route_manager';
 
 export const app = new Application();
 
-globalThis.__PIXI_APP__ = app;
+// globalThis.__PIXI_APP__ = app;
 
 await app.init({ background: "#000000", resizeTo: window, preference: "webgl"});
 
